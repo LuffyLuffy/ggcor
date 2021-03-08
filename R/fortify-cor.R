@@ -21,6 +21,7 @@
 #' "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC)
 #' or "centroid" (= UPGMC).
 #' @param ... extra params passing to \code{matrix_order}.
+#' @param cor.test.method  of pearson or spearman
 #' @return cor_tbl object.
 #' @importFrom dplyr %>% mutate
 #' @rdname fortify_cor
@@ -43,6 +44,7 @@ fortify_cor <- function(x,
                         cor.test = FALSE,
                         cluster = FALSE,
                         cluster.method = "complete",
+                        cor.test.method='pearson',
                         ...)
 {
   type <- match.arg(type, c("full", "upper", "lower"))
@@ -84,7 +86,7 @@ fortify_cor <- function(x,
       set_attrs(dplyr::bind_rows(dfs), attrs)
     )
   } else {
-    corr <- correlate(x, y, cor.test, ...)
+    corr <- correlate(x, y, cor.test,cor.test.method, ...)
     df <- as_cor_tbl(corr, type = type, show.diag = show.diag, cluster = cluster,
                cluster.method = cluster.method)
   }
